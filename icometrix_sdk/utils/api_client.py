@@ -9,7 +9,7 @@ from urllib.parse import urljoin
 from requests.adapters import HTTPAdapter
 from urllib3.util import Retry
 
-from icometrix_sdk import __version__
+from icometrix_sdk._version import __version__
 from icometrix_sdk.exceptions import IcometrixAPIException
 from icometrix_sdk.utils.file_upload import create_multipart
 

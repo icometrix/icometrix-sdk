@@ -1,6 +1,4 @@
 """A library that provides a Python interface to the Icometrix API"""
-__version__ = '0.0.1'
-
 from typing import Optional
 
 from icometrix_sdk.authentication import PasswordAuthentication, AuthenticationMethod, get_auth_method
@@ -51,7 +49,7 @@ class IcometrixApi:
         self.authenticate()
         return self
 
-    def __exit__(self):
+    def __exit__(self, *args, **kwargs):
         if self._auth:
             self._auth.disconnect(self._api_client)
 
