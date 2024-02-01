@@ -14,9 +14,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+      contents: read
     steps:
-    - uses: actions/checkout@v3
     - id: deployment
       uses: sphinx-notes/pages@v3
-      with:
-        checkout: false
