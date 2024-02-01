@@ -1,0 +1,2 @@
+class IcometrixAPIException(Exception):
+    pass
