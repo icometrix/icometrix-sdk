@@ -1,5 +1,5 @@
-Patient
-=======
+Base
+====
 
 .. automodule:: icometrix_sdk.models.base
    :members:
