@@ -18,6 +18,8 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v3
+    - name: Make the script files executable
+      run: chmod +x ./gh-version.sh
     - name: Modify version
       run: ./gh-version.sh
     - id: Deployment
