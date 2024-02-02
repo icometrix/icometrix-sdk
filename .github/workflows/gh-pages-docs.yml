@@ -17,5 +17,10 @@ jobs:
       id-token: write
       contents: write
     steps:
-    - id: deployment
+    - uses: actions/checkout@v3
+    - name: Modify version
+      run: ./gh-version.sh
+    - id: Deployment
       uses: sphinx-notes/pages@v3
+      with:
+        checkout: false
