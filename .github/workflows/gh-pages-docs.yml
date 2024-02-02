@@ -17,7 +17,7 @@ jobs:
       id-token: write
       contents: write
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Make the script files executable
       run: chmod +x ./gh-version.sh
     - name: Modify version
