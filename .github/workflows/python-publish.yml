@@ -10,7 +10,7 @@ name: Upload Python Package
 
 on:
   release:
-    types: [published]
+    types: [published, workflow_dispatch]
 
 permissions:
   contents: read
@@ -29,6 +29,8 @@ jobs:
       uses: actions/setup-python@v3
       with:
         python-version: '3.x'
+    - name: Make the script files executable
+      run: chmod +x ./gh-version.sh
     - name: Modify version
       run: ./gh-version.sh
     - name: Install dependencies
