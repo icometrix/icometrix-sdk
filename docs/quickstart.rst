@@ -12,6 +12,7 @@ icometrix_sdk can be installed with `pip <https://pip.pypa.io>`_
 
   $ python -m pip install icometrix_sdk
 
+
 Authentication
 ---------------
 

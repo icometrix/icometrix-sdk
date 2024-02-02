@@ -12,13 +12,15 @@ from datetime import date
 root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 sys.path.insert(0, root_path)
 
+from icometrix_sdk._version import __version__
+
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "icometrix-sdk"
 copyright = f"{date.today().year}, icometrix"
 author = "icometrix"
-release = "0.0.1"
+release = __version__
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -26,6 +28,11 @@ release = "0.0.1"
 extensions = [
     "sphinx.ext.autodoc"
 ]
+
+# sphinx.ext.autodoc options
+autodoc_default_options = {
+    'exclude-members': 'model_config, model_fields'  # exclude pydantic internal fields
+}
 
 templates_path = ["_templates"]
 exclude_patterns = []
