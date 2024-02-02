@@ -1,6 +1,8 @@
 name: Generate docs
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  release:
+    types: [published]
 
 concurrency:
   group: ${{ github.ref }}
