@@ -1,10 +1,10 @@
-from typing import Optional, List, Union
+from typing import Optional, Union
 
 from icometrix_sdk.models.base import BackendEntity
 
 
 class CustomerReportEntity(BackendEntity):
-    cost:  Optional[Union[str, float]] = None
+    cost: Optional[Union[str, float]] = None
     status: str
     study_id: str
     patient_id: str
@@ -23,4 +23,3 @@ class CustomerReportEntity(BackendEntity):
     study_instance_uid: str
     icobrain_report_type: str
     report_translated_remarks: Optional[str] = None
-    uri: str

@@ -34,16 +34,16 @@ class PageIterator(Generic[T]):
         self._params = {"pageIndex": self._page_index, "pageSize": self._page_size}
         return self
 
-    def __next__(self) -> List[T]:
+    def __next__(self) -> PaginatedResponse[T]:
         if not self._current_page:
             self._fetch_current_page()
-            return self._current_page.results
+            return self._current_page
         if not self._current_page.has_next():
             raise StopIteration
 
         self._page_index = self._page_index + 1
         self._fetch_current_page()
-        return self._current_page.results
+        return self._current_page
 
     def _fetch_current_page(self):
         self._params = {"pageIndex": self._page_index, "pageSize": self._page_size}

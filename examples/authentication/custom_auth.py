@@ -6,6 +6,7 @@ from icometrix_sdk import IcometrixApi, AuthenticationMethod
 from icometrix_sdk.utils.api_client import ApiClient
 
 SERVER = "https://icobrain-test.icometrix.com"
+client = ApiClient(SERVER)
 
 
 class FileAuth(AuthenticationMethod):
@@ -24,4 +25,5 @@ class FileAuth(AuthenticationMethod):
 
 
 auth = FileAuth("/mount/secret.txt")
-ico_api = IcometrixApi(SERVER, auth)
+ico_api = IcometrixApi(client, auth)
+ico_api.authenticate()

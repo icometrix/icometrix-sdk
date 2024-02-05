@@ -1,12 +1,15 @@
 from icometrix_sdk import IcometrixApi
+from icometrix_sdk.utils.api_client import ApiClient
 from icometrix_sdk.utils.paginator import get_paginator
 
-PROJECT_ID = "20c9e829-bc24-42bb-ac02-6527db61f4c5"
+PROJECT_ID = "uuid"
+DICOM_DIR_PATH = "<path>"
+
 SERVER = "https://icobrain-test.icometrix.com"
-DICOM_DIR_PATH = "/Users/jpinxten/Downloads/LD_20111222"
+client = ApiClient(SERVER)
 
 # Initialize the icometrix API
-ico_api = IcometrixApi(SERVER)
+ico_api = IcometrixApi(client)
 
 customer_reports = ico_api.customer_reports.get_all(PROJECT_ID)
 

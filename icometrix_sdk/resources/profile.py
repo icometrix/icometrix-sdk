@@ -1,5 +1,3 @@
-from icometrix_sdk.models.base import PaginatedResponse
-from icometrix_sdk.models.project_entity import ProjectEntity
 from icometrix_sdk.models.user_entity import User
 from icometrix_sdk.utils.api_client import ApiClient
 

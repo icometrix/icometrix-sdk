@@ -61,7 +61,7 @@ class TokenAuthentication(AuthenticationMethod):
 
 def get_auth_method() -> Optional[AuthenticationMethod]:
     """
-    Find a authentication method based on the 'AUTH_METHOD' environment variable
+    Find an authentication method based on the 'AUTH_METHOD' environment variable
     """
     auth_method = os.getenv("AUTH_METHOD")
     if auth_method == "basic":

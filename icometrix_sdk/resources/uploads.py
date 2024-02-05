@@ -1,7 +1,4 @@
 import os
-from typing import Dict
-
-from urllib3.fields import RequestField
 
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.upload_entity import StartUploadDto, UploadEntity, UploadEntityFiles
@@ -104,7 +101,7 @@ class Uploads:
         """
         Upload files to an upload entry, these can be DICOMs or zips
 
-        :param upload_uri: A uri to upload to
+        :param upload_uri: The uri to upload to
         :param fields: Dictionary of fields or list of (key, :class:`~urllib3.fields.RequestField`).
         :return:
         """
@@ -114,7 +111,7 @@ class Uploads:
         """
         A function to complete an upload entry, and start the importing the files
 
-        :param upload_uri: A uri to upload to
+        :param upload_uri: The uri to upload to
         :return:
         """
         resp = self._api.post(upload_uri, data={})

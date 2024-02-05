@@ -1,12 +1,15 @@
 from icometrix_sdk import IcometrixApi
 from icometrix_sdk.models.upload_entity import StartUploadDto
+from icometrix_sdk.utils.api_client import ApiClient
 
-PROJECT_ID = "5461177d-c34b-467e-8610-9ba71cbb3eb4"
+PROJECT_ID = "uuid"
+DICOM_DIR_PATH = "<path>"
+
 SERVER = "https://icobrain-test.icometrix.com"
-DICOM_DIR_PATH = "/Users/jpinxten/Downloads/LD_20111222"
+client = ApiClient(SERVER)
 
 # Initialize the icometrix API
-ico_api = IcometrixApi(SERVER)
+ico_api = IcometrixApi(client)
 
 # Get the project, to make sure its there (will throw a 404 in case the project is not found)
 project = ico_api.projects.get_one_by_id(PROJECT_ID)

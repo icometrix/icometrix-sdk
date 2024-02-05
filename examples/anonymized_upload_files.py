@@ -8,17 +8,20 @@ from pydicom.errors import InvalidDicomError
 from icometrix_sdk import IcometrixApi
 from icometrix_sdk.models.upload_entity import StartUploadDto
 from icometrix_sdk.utils.anonymizer import Anonymizer
+from icometrix_sdk.utils.api_client import ApiClient
 from icometrix_sdk.utils.hash_factory import SHA3
 
-PROJECT_ID = "5461177d-c34b-467e-8610-9ba71cbb3eb4"
-SERVER = "https://icobrain-test.icometrix.com"
-DICOM_DIR_PATH = "/Users/jpinxten/Downloads/LD_20111222"
+PROJECT_ID = "uuid"
+DICOM_DIR_PATH = "<path>"
 
 hash_method = SHA3(size=512)
 anonymizer = Anonymizer(hash_method)
 
+SERVER = "https://icobrain-test.icometrix.com"
+client = ApiClient(SERVER)
+
 # Initialize the icometrix API
-ico_api = IcometrixApi(SERVER)
+ico_api = IcometrixApi(client)
 
 # Get the project, to make sure its there (will throw a 404 in case the project is not found)
 project = ico_api.projects.get_one_by_id(PROJECT_ID)

@@ -1,7 +1,9 @@
 """A library that provides a Python interface to the Icometrix API"""
+import os
 from typing import Optional
 
 from icometrix_sdk.authentication import PasswordAuthentication, AuthenticationMethod, get_auth_method
+from icometrix_sdk.exceptions import IcometrixAPIException
 from icometrix_sdk.resources.customer_reports import CustomerReports
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.resources.patients import Patients
@@ -9,6 +11,17 @@ from icometrix_sdk.resources.profile import Profile
 from icometrix_sdk.resources.projects import Projects
 from icometrix_sdk.resources.uploads import Uploads
 from icometrix_sdk.utils.api_client import ApiClient
+
+
+def get_api_client() -> ApiClient:
+    """
+    Create an ApiClient with the 'API_HOST' environment variable as server
+    """
+    api_host = os.getenv("API_HOST")
+    if not api_host:
+        raise IcometrixAPIException("Please set the 'API_HOST' environment variable")
+
+    return ApiClient(api_host)
 
 
 class IcometrixApi:
@@ -27,17 +40,19 @@ class IcometrixApi:
     uploads: Uploads
     customer_reports: CustomerReports
 
-    _auth: Optional[AuthenticationMethod]
+    _auth: AuthenticationMethod
+    _api_client: ApiClient
 
-    def __init__(self, server: str, auth: Optional[AuthenticationMethod] = None):
-        self.server = server
+    def __init__(self, api_client: Optional[ApiClient] = None, auth: Optional[AuthenticationMethod] = None):
+        # self.server = server
 
         self._auth = auth
         if not self._auth:
             self._auth = get_auth_method()
 
-        self._api_client = ApiClient(self.server)
-        self.authenticate()
+        self._api_client = api_client
+        if not self._api_client:
+            self._api_client = get_api_client()
 
         self.profile = Profile(self._api_client)
         self.projects = Projects(self._api_client)
