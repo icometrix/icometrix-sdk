@@ -1,11 +1,18 @@
+import logging
+import os
+from time import sleep
+
 from icometrix_sdk import IcometrixApi
-from icometrix_sdk.utils.api_client import ApiClient
 from icometrix_sdk.utils.paginator import get_paginator
 
-SERVER = "https://icobrain-test.icometrix.com"
-client = ApiClient(SERVER)
+logging.basicConfig(level=logging.INFO)
 
-with IcometrixApi(client) as ico_api:
-    for projects in get_paginator(ico_api.projects.get_all):
-        for project in projects:
-            print(project.name)
+if __name__ == '__main__':
+
+    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+
+    with IcometrixApi() as ico_api:
+        for projects in get_paginator(ico_api.projects.get_all):
+            for project in projects:
+                sleep(30)
+                print(project.name)

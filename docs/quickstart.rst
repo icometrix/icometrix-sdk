@@ -42,9 +42,11 @@ method and pass it as a parameter to the IcometrixApi.
     SERVER = "https://icobrain-test.icometrix.com"
 
     auth = PasswordAuthentication("example@company.com", os.environ["PASSWORD"])
-    ico_api = IcometrixApi(SERVER, auth)
+    client = RequestsApiClient(SERVER, auth)
 
-You can use :meth:`~IcometrixApi.profile.who_am_i` function to verify your connection
+    ico_api = IcometrixApi(client)
+
+You can use :meth:`~icometrix_sdk.resources.profile.Profile.who_am_i` function to verify your connection
 
 .. code-block:: python
 
@@ -53,7 +55,9 @@ You can use :meth:`~IcometrixApi.profile.who_am_i` function to verify your conne
     SERVER = "https://icobrain-test.icometrix.com"
 
     auth = PasswordAuthentication("example@company.com", os.environ["PASSWORD"])
-    ico_api = IcometrixApi(SERVER, auth)
+    client = RequestsApiClient(SERVER, auth)
+
+    ico_api = IcometrixApi(client)
 
     # Will raise an exception if the authentication failed.
     me = ico_api.profile.who_am_i()

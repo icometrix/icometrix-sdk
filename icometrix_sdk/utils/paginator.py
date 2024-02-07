@@ -1,5 +1,5 @@
 from inspect import signature
-from typing import Callable, Generic, TypeVar, Optional, List
+from typing import Callable, Generic, TypeVar, Optional
 
 from icometrix_sdk.models.base import PaginatedResponse
 
@@ -35,19 +35,20 @@ class PageIterator(Generic[T]):
         return self
 
     def __next__(self) -> PaginatedResponse[T]:
-        if not self._current_page:
-            self._fetch_current_page()
+        if self._current_page is None:
+            self._current_page = self._fetch_current_page()
+            self._page_index = self._page_index + 1
             return self._current_page
         if not self._current_page.has_next():
             raise StopIteration
 
         self._page_index = self._page_index + 1
-        self._fetch_current_page()
+        self._current_page = self._fetch_current_page()
         return self._current_page
 
-    def _fetch_current_page(self):
+    def _fetch_current_page(self) -> PaginatedResponse[T]:
         self._params = {"pageIndex": self._page_index, "pageSize": self._page_size}
-        self._current_page = self._func(**self._op_kwargs, params=self._params)
+        return self._func(**self._op_kwargs, params=self._params)
 
 
 def get_paginator(func: Callable, **kwargs):

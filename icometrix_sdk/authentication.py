@@ -2,6 +2,9 @@ import os
 from abc import ABC, abstractmethod
 from typing import Optional
 
+from requests import Request
+
+from icometrix_sdk.exceptions import IcometrixConfigException
 from icometrix_sdk.utils.api_client import ApiClient
 
 TOKEN_URI = "/authentication-service/api/v1/token-sessions"
@@ -36,9 +39,8 @@ class PasswordAuthentication(AuthenticationMethod):
         api.post(SESSION_URI, data=data)
 
     def disconnect(self, api: ApiClient):
-        if api.session:
+        if api:
             api.delete(SESSION_URI)
-            api.session.close()
 
 
 class TokenAuthentication(AuthenticationMethod):
@@ -54,9 +56,8 @@ class TokenAuthentication(AuthenticationMethod):
         api.post(TOKEN_URI, data=data)
 
     def disconnect(self, api: ApiClient):
-        if api.session:
+        if api:
             api.delete(SESSION_URI)
-            api.session.close()
 
 
 def get_auth_method() -> Optional[AuthenticationMethod]:
@@ -69,4 +70,4 @@ def get_auth_method() -> Optional[AuthenticationMethod]:
     elif auth_method == "token":
         return TokenAuthentication(os.environ["TOKEN"])
 
-    print("Please set an 'AUTH_METHOD' (basic OR token)")
+    raise IcometrixConfigException("Please set an 'AUTH_METHOD' (basic OR token)")

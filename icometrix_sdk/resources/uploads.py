@@ -1,8 +1,11 @@
+import logging
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
+from icometrix_sdk.exceptions import IcometrixException
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.upload_entity import StartUploadDto, UploadEntity, UploadEntityFiles
-from icometrix_sdk.utils.api_client import ApiClient
+from icometrix_sdk.utils.requests_api_client import ApiClient
 
 
 class Uploads:
@@ -53,23 +56,44 @@ class Uploads:
         resp = self._api.get(f"{upload_folder_uri}/files", **kwargs)
         return UploadEntityFiles(**resp)
 
-    def upload_dicom_dir(self, project_id: str, dicom_dir_path: str, options: StartUploadDto) -> UploadEntity:
+    def upload_dicom_dir(self, project_id: str, dicom_dir_path: str, options: StartUploadDto,
+                         complete_on_error=False) -> UploadEntity:
         """
         A higher level function to upload all DICOMs of a directory AND all of its subdirectories
 
-        :param project_id: The ID of the project you want to upload to
-        :param dicom_dir_path: The path to the directory
-        :param options: Extra upload options
+        :param project_id:
+            The ID of the project you want to upload to
+        :param dicom_dir_path:
+            The path to the directory
+        :param options:
+            Extra upload options
+        :param complete_on_error:
+            Setting this boolean to true will still complete the upload, even if a file failed to upload
         :return:
         """
         upload = self.start_upload(project_id, options)
 
-        # Loop over all files in a DIR and upload them to the before created upload entry
-        for path, subdirs, files in os.walk(dicom_dir_path):
-            for name in files:
-                if name.startswith("."):
-                    continue
-                self.upload_dicom_path(upload.uri, os.path.join(path, name))
+        with ThreadPoolExecutor() as executor:
+            futures = []
+            # Loop over all files in a DIR and upload them to the before created upload entry
+            for path, subdirs, files in os.walk(dicom_dir_path):
+                for name in files:
+                    if name.startswith("."):
+                        continue
+
+                    file_path = os.path.join(path, name)
+                    future = executor.submit(self.upload_dicom_path, upload.uri, file_path)
+                    futures.append(future)
+
+            # Wait for all threads to complete and handle exceptions
+            for completed_future in as_completed(futures):
+                try:
+                    completed_future.result()  # Check for exceptions here
+                except IcometrixException as e:
+                    # Log or handle the exception appropriately
+                    logging.error(f"Exception in one of the threads: {e}")
+                    if not complete_on_error:
+                        raise e
 
         # Once all files have been uploaded, signal that they are all there and start the import/processing
         return self.complete_upload(upload.uri)

@@ -1,6 +1,6 @@
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.customer_report_entity import CustomerReportEntity
-from icometrix_sdk.utils.api_client import ApiClient
+from icometrix_sdk.utils.requests_api_client import ApiClient
 
 
 class CustomerReports:
