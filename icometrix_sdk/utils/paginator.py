@@ -48,19 +48,34 @@ class PageIterator(Generic[T]):
 
     def _fetch_current_page(self) -> PaginatedResponse[T]:
         self._params = {"pageIndex": self._page_index, "pageSize": self._page_size}
-        return self._func(**self._op_kwargs, params=self._params)
+        if "params" in self._op_kwargs:
+            self._op_kwargs["params"].update(self._params)
+        else:
+            self._op_kwargs["params"] = self._params
+        return self._func(**self._op_kwargs)
 
 
-def get_paginator(func: Callable, **kwargs):
+def get_paginator(func: Callable, page_size: Optional[int] = 50, starting_index: Optional[int] = 0, **kwargs):
     """
     Create paginator object for an operation.
 
     This returns an iterable object. Iterating over
     this object will yield a single page of a response
     at a time.
+
+    :param func:
+        The function that needs to be paginated. (The function needs
+         to return a :class:`~icometrix_sdk.models.base.PaginatedResponse`)
+    :param page_size:
+        The size of the pages
+    :param starting_index:
+        The starting page
+    :returns: Iterator
     """
     if not can_paginate(func):
         raise ValueError(f"Function '{func.__name__}' can't be paginated")
 
     sig = signature(func)
-    return iter(PageIterator[sig.return_annotation](func, op_kwargs=kwargs))
+    return iter(
+        PageIterator[sig.return_annotation](func, op_kwargs=kwargs, page_size=page_size, starting_index=starting_index)
+    )

@@ -11,6 +11,14 @@ Quickstart
 
    quickstart
 
+Developer guide
+---------------
+
+.. toctree::
+   :maxdepth: 2
+
+   developer_guide/index
+
 
 API reference
 -------------

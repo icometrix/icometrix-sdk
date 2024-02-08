@@ -8,11 +8,11 @@ class ApiClient(ABC):
     """
 
     @abstractmethod
-    def get(self, uri: str, params: Optional[dict] = None, **kwargs) -> dict:
+    def get(self, uri: str, **kwargs) -> dict:
         pass
 
     @abstractmethod
-    def post(self, uri: str, data: dict, headers: Optional[dict] = None, **kwargs) -> dict:
+    def post(self, uri: str, data: dict, **kwargs) -> dict:
         pass
 
     @abstractmethod

@@ -13,6 +13,11 @@ class Projects:
 
         :return: A Paginated response containing projects
         """
+        no_settings = {"no-settings": "true"}
+        if "params" in kwargs:
+            kwargs["params"].update(no_settings)
+        else:
+            kwargs["params"] = no_settings
         page = self._api.get("/storage-service/api/v2/projects", **kwargs)
         return PaginatedResponse[ProjectEntity](**page)
 
@@ -23,7 +28,8 @@ class Projects:
         :param project_uri: the uri of the project
         :return: A single project or 404
         """
-        resp = self._api.get(project_uri)
+        params = {"no-settings": "true"}
+        resp = self._api.get(project_uri, params=params)
         return ProjectEntity(**resp)
 
     def get_one_by_id(self, project_id: str) -> ProjectEntity:
@@ -33,5 +39,6 @@ class Projects:
         :param project_id: the ID of the project
         :return: A single project or 404
         """
-        resp = self._api.get(f"/storage-service/api/v1/projects/{project_id}")
+        params = {"no-settings": "true"}
+        resp = self._api.get(f"/storage-service/api/v1/projects/{project_id}", params=params)
         return ProjectEntity(**resp)

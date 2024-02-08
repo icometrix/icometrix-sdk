@@ -12,9 +12,7 @@ if __name__ == '__main__':
     # Initialize the icometrix API
     ico_api = IcometrixApi()
 
-    customer_reports = ico_api.customer_reports.get_all(PROJECT_ID)
-
-    for reports in get_paginator(ico_api.customer_reports.get_all, project_id=PROJECT_ID):
+    for reports in get_paginator(ico_api.customer_reports.get_all, page_size=30, project_id=PROJECT_ID):
         for report in reports:
             if report.status == "Finished":
                 print(report.study_instance_uid, report.report_status)

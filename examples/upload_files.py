@@ -4,7 +4,6 @@ from icometrix_sdk import IcometrixApi
 from icometrix_sdk.models.upload_entity import StartUploadDto
 
 PROJECT_ID = "uuid"
-DICOM_DIR_PATH = "<path>"
 DICOM_PATHS = [
     "IM-0001-0001.dcm"
     "IM-0001-0002.dcm"

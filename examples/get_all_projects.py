@@ -11,6 +11,6 @@ if __name__ == '__main__':
     os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
 
     with IcometrixApi() as ico_api:
-        for projects in get_paginator(ico_api.projects.get_all):
+        for projects in get_paginator(ico_api.projects.get_all, page_size=5):
             for project in projects:
                 print(project.name)

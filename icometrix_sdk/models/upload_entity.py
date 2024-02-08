@@ -1,4 +1,4 @@
-from typing import Optional, List, Union
+from typing import Optional, List, Union, Literal
 
 from pydantic import BaseModel
 
@@ -6,13 +6,12 @@ from icometrix_sdk.models.base import BackendEntity
 
 
 class StartUploadDto(BaseModel):
-    icobrain_report_type: str
+    icobrain_report_type: Literal['icobrain_ms', 'icobrain_dm']
 
 
 class UploadEntity(BackendEntity):
     status: str
     folder_uri: str
-    files_uri: List[str]
     type: str
     compressed: Optional[Union[str, bool]] = None
     logs: List[str]

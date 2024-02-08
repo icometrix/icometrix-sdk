@@ -31,7 +31,7 @@ extensions = [
 
 # sphinx.ext.autodoc options
 autodoc_default_options = {
-    'exclude-members': 'model_config, model_fields'  # exclude pydantic internal fields
+    'exclude-members': 'model_config, model_fields, model_post_init'  # exclude pydantic internal fields
 }
 
 templates_path = ["_templates"]

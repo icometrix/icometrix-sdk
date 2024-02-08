@@ -1,10 +1,8 @@
 import json
 import logging
 import os
-import threading
 import uuid
-from functools import lru_cache
-from typing import Optional, Type, Dict
+from typing import Optional, Type
 from urllib.parse import urljoin
 
 import requests
@@ -123,7 +121,7 @@ class RequestsApiClient(ApiClient):
 
         return response
 
-    def get(self, uri: str, params: Optional[dict] = None, **kwargs) -> dict:
+    def get(self, uri: str, **kwargs) -> dict:
         """
         Submit a GET request to the API.
 
@@ -135,18 +133,16 @@ class RequestsApiClient(ApiClient):
         resp = self._make_request(
             method="GET",
             url=uri,
-            params=params,
             **kwargs
         )
         return response_to_dict(resp)
 
-    def post(self, uri: str, data: dict, headers: Optional[dict] = None, **kwargs) -> dict:
+    def post(self, uri: str, data: dict, **kwargs) -> dict:
         """
         Submit a POST request to the API.
 
         :param uri: A relative URL to specify the API endpoint
         :param data: A dictionary containing data for the request body
-        :param headers: A dictionary containing additional request headers.
         :returns: The API response as a dictionary.
 
         """
@@ -155,7 +151,6 @@ class RequestsApiClient(ApiClient):
             method="POST",
             url=uri,
             data=json.dumps(data),
-            headers=headers,
             **kwargs
         )
         return response_to_dict(resp)

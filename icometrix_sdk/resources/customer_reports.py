@@ -27,13 +27,3 @@ class CustomerReports:
         """
         resp = self._api.get(customer_report_uri)
         return CustomerReportEntity(**resp)
-
-    def delete(self, customer_report_uri: str, **kwargs):
-        """
-        Delete a customer-report
-
-        :param customer_report_uri: The uri of the customer-resport you want to delete
-        :return:
-        """
-
-        self._api.delete(customer_report_uri, **kwargs)
