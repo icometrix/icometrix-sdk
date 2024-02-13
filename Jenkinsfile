@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'jenkins-agent'
+        label 'backend-docker-build'
     }
 
     stages {
