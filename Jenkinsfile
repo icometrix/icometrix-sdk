@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'tf-deploy'
+        label 'jenkins-agent'
     }
 
     stages {
