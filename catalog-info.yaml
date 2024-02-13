@@ -1,0 +1,21 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: icometrix-sdk
+  description: Public icometrix sdk
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+    jenkins.io/job-full-name: "icometrix-sdk"
+  tags:
+    - python
+    - library
+#  links:
+#    - url: https://admin.example-org.com
+#      title: Admin Dashboard
+#      icon: dashboard
+#      type: admin-dashboard
+spec:
+  type: library
+  lifecycle: development
+  owner: it-team
+  system: backend
