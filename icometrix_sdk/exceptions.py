@@ -16,3 +16,7 @@ class IcometrixConfigException(IcometrixException):
 
 class IcometrixAuthException(IcometrixException):
     fmt = "Authentication failed"
+
+
+class IcometrixDataImportException(IcometrixException):
+    fmt = "Dicom import failed"

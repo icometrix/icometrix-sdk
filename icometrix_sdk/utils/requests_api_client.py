@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import shutil
 import uuid
 from typing import Optional, Type
 from urllib.parse import urljoin
@@ -59,7 +60,7 @@ class RequestsApiClient(ApiClient):
             self._auth.connect(self)
             self._auth_attempts = 0
 
-    def refresh_token(self, resp: Response):
+    def _refresh_token(self, resp: Response):
         if self._auth_attempts > 0:
             raise IcometrixAuthException("Failed to authenticate")
         if resp.status_code == 401:
@@ -87,7 +88,8 @@ class RequestsApiClient(ApiClient):
                       headers: Optional[dict] = None,
                       params: Optional[dict] = None,
                       files=None,
-                      cookies=None) -> Response:
+                      cookies=None,
+                      stream=False) -> Response:
         """
         private function to abstract most of the HTTP request logic
 
@@ -111,7 +113,8 @@ class RequestsApiClient(ApiClient):
                 params=params,
                 files=files,
                 timeout=HTTP_TIMEOUT,
-                cookies=cookies
+                cookies=cookies,
+                stream=stream
             )
             response.raise_for_status()
         except HTTPError as e:
@@ -205,6 +208,11 @@ class RequestsApiClient(ApiClient):
             headers=headers,
             **kwargs
         )
+
+    def stream_file(self, uri: str, out_path: str, **kwargs):
+        with self._make_request('GET', uri, stream=True) as r:
+            with open(out_path, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
 
 
 def response_to_dict(response: Response) -> dict:

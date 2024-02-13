@@ -26,3 +26,7 @@ class ApiClient(ABC):
     @abstractmethod
     def put_file(self, uri: str, fields, **kwargs):
         pass
+
+    @abstractmethod
+    def stream_file(self, uri: str, out_path: str, **kwargs):
+        pass

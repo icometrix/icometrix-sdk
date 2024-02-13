@@ -1,16 +1,22 @@
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from time import sleep
 
-from icometrix_sdk.exceptions import IcometrixException
+from requests.adapters import DEFAULT_POOLSIZE
+
+from icometrix_sdk.exceptions import IcometrixException, IcometrixDataImportException
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.upload_entity import StartUploadDto, UploadEntity, UploadEntityFiles
 from icometrix_sdk.utils.requests_api_client import ApiClient
 
+logger = logging.getLogger(__name__)
+
 
 class Uploads:
-    def __init__(self, api: ApiClient):
+    def __init__(self, api: ApiClient, polling_interval=2):
         self._api = api
+        self.polling_interval = polling_interval
 
     def get_all(self, project_id: str, **kwargs) -> PaginatedResponse[UploadEntity]:
         """
@@ -73,7 +79,7 @@ class Uploads:
         """
         upload = self.start_upload(project_id, options)
 
-        with ThreadPoolExecutor() as executor:
+        with ThreadPoolExecutor(DEFAULT_POOLSIZE) as executor:
             futures = []
             # Loop over all files in a DIR and upload them to the before created upload entry
             for path, subdirs, files in os.walk(dicom_dir_path):
@@ -82,6 +88,7 @@ class Uploads:
                         continue
 
                     file_path = os.path.join(path, name)
+                    logger.info(f"Uploading {file_path}")
                     future = executor.submit(self.upload_dicom_path, upload.uri, file_path)
                     futures.append(future)
 
@@ -140,3 +147,20 @@ class Uploads:
         """
         resp = self._api.post(upload_uri, data={})
         return UploadEntity(**resp)
+
+    def wait_for_data_import(self, upload_uri: str) -> UploadEntity:
+        """
+        After data has been upload (and completed), we need to wait for the data to be imported
+
+        :param upload_uri: The uri to upload to
+        :return: UploadEntity
+        """
+
+        upload = self.get_one(upload_uri)
+        while upload.status != "import_success":
+            upload = self.get_one(upload.folder_uri)
+            logger.info(f"Waiting for import to complete: {upload.status}")
+            if upload.status == "import_failed":
+                IcometrixDataImportException(f"Import failed: {upload.errors[0]}")
+            sleep(self.polling_interval)
+        return upload
