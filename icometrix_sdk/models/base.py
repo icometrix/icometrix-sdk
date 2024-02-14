@@ -1,7 +1,12 @@
 from pydantic import BaseModel
-from typing import Generic, TypeVar, List, Optional, Iterator
+from typing import Generic, TypeVar, List, Optional, Iterator, Literal
 
 T = TypeVar("T")
+
+DicomModality = Literal[
+    "CR", "CT", "MR", "US", "OT", "BI", "CD", "DD", "DG", "ES", "LS", "PT", "RG", "ST", "TG", "XA",
+    "RF", "HC", "DX", "NM", "MG", "IO", "PX", "GM", "SM", "XC", "PR", "AU", "EPS", "HD", "SR", "OP",
+    "IVUS", "SMR", "RTIMAGE", "RTDOSE", "RTSTRUCT", "RTPLAN", "RTRECORD"]
 
 
 class BackendEntity(BaseModel):
