@@ -12,9 +12,11 @@ pipeline {
 
         stage('push_to_github') {
             steps {
-                sh '''
-                echo "test succeeded"
-                '''
+                withCredentials([usernamePassword(credentialsId: 'gh_icogitadmin', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh '''
+                    git push https://$USERNAME:$PASSWORD@github.com/icometrix/icometrix-sdk.git    
+                    '''
+                }
             }     
         }
     }
