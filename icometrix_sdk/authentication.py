@@ -65,6 +65,12 @@ def get_auth_method() -> Optional[AuthenticationMethod]:
     Find an authentication method based on the 'AUTH_METHOD' environment variable
     """
     auth_method = os.getenv("AUTH_METHOD")
+    if auth_method is None:
+        if os.getenv("TOKEN"):
+            auth_method = "token"
+        elif os.getenv("EMAIL") and os.getenv("PASSWORD"):
+            auth_method = "basic"
+
     if auth_method == "basic":
         return PasswordAuthentication(os.environ["EMAIL"], os.environ["PASSWORD"])
     elif auth_method == "token":

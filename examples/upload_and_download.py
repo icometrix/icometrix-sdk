@@ -1,14 +1,12 @@
 import logging
 import os
 from pathlib import Path
-from time import sleep
-from typing import List, Dict
+from typing import List
 
 import pydicom
 from pydicom.errors import InvalidDicomError
 
 from icometrix_sdk import IcometrixApi
-from icometrix_sdk.models.customer_report_entity import CustomerReportEntity
 from icometrix_sdk.models.upload_entity import StartUploadDto
 
 PROJECT_ID = "<uuid>"
@@ -20,9 +18,15 @@ DICOM_DIR_PATH = "<path>"
 logging.basicConfig(level=logging.INFO)
 
 
-def extract_unique_studies(dir_path: str) -> List[str]:
+def extract_unique_studies(folder_path: str) -> List[str]:
+    """
+    Extract all study_instance_uids from DICOMS in a (sub)folder(s)
+
+    :param folder_path: The root path to start searching
+    :return:
+    """
     study_uids: List[str] = []
-    for path, subdirs, files in os.walk(dir_path):
+    for path, _, files in os.walk(folder_path):
         for name in files:
 
             file_path = os.path.join(path, name)
@@ -35,24 +39,6 @@ def extract_unique_studies(dir_path: str) -> List[str]:
                 continue
             study_uids.append(ds.StudyInstanceUID)
     return study_uids
-
-
-def wait_for_customer_reports_to_finish(customer_reports: List[CustomerReportEntity]) -> List[CustomerReportEntity]:
-    finished_customer_reports: Dict[str, CustomerReportEntity] = {}
-    while len(finished_customer_reports) != len(customer_reports):
-        sleep(5)
-        for customer_report in customer_reports:
-            if customer_report.id in finished_customer_reports:
-                continue
-
-            report = ico_api.customer_reports.get_one(customer_report.uri)
-            if report.status != "Finished":
-                print(f"Waiting for {report.study_instance_uid} to complete: {report.status}")
-                continue
-
-            print(f"Finished {report.study_instance_uid}")
-            finished_customer_reports[report.id] = report
-    return [value for value in finished_customer_reports.values()]
 
 
 if __name__ == '__main__':
@@ -81,7 +67,8 @@ if __name__ == '__main__':
         customer_reports.append(csr)
 
     # Wait for the reports to finish
-    customer_reports = wait_for_customer_reports_to_finish(customer_reports)
+    customer_report_uris = [customer_report.uri for customer_report in customer_reports]
+    customer_reports = ico_api.customer_reports.wait_for_results(customer_report_uris)
 
     # Download icobrain report files
     for customer_report in customer_reports:

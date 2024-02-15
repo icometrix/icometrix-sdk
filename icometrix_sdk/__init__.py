@@ -6,6 +6,7 @@ from icometrix_sdk.authentication import PasswordAuthentication, AuthenticationM
 from icometrix_sdk.exceptions import IcometrixConfigException
 from icometrix_sdk.resources.customer_reports import CustomerReports
 from icometrix_sdk.models.base import PaginatedResponse
+from icometrix_sdk.resources.customer_results import CustomerResults
 from icometrix_sdk.resources.patients import Patients
 from icometrix_sdk.resources.profile import Profile
 from icometrix_sdk.resources.projects import Projects
@@ -39,6 +40,7 @@ class IcometrixApi:
     patients: Patients
     uploads: Uploads
     customer_reports: CustomerReports
+    customer_results: CustomerResults
 
     _api_client: ApiClient
 
@@ -52,9 +54,13 @@ class IcometrixApi:
         self.patients = Patients(self._api_client)
         self.uploads = Uploads(self._api_client)
         self.customer_reports = CustomerReports(self._api_client)
+        self.customer_results = CustomerResults(self._api_client)
 
     def __enter__(self):
         return self
 
     def __exit__(self, *args, **kwargs):
         pass
+        # todo force logout
+        # if self._api_client.auth:
+        #     self._api_client.auth.disconnect(self._api_client)

@@ -9,7 +9,7 @@ from datetime import date
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, root_path)
 
 from icometrix_sdk._version import __version__
@@ -44,4 +44,4 @@ autodoc_typehints = "description"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-html_static_path = ["_static"]
+# html_static_path = ["_static"]

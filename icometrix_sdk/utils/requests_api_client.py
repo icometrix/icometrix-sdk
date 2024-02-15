@@ -33,7 +33,7 @@ class RequestsApiClient(ApiClient):
     _auth_attempts = 0
 
     _session: Session
-    _auth: Optional[AuthenticationMethod]
+    auth: Optional[AuthenticationMethod]
 
     def __init__(self, server: str, auth: Optional[AuthenticationMethod] = None):
         self.base_headers = {
@@ -45,7 +45,7 @@ class RequestsApiClient(ApiClient):
             "Content-Type": "application/json"
         }
         self.server = server
-        self._auth = auth
+        self.auth = auth
 
         if not server:
             raise IcometrixConfigException("Server is required")
@@ -54,10 +54,10 @@ class RequestsApiClient(ApiClient):
         self._authenticate()
 
     def _authenticate(self):
-        if self._auth:
+        if self.auth:
             logger.info("Authenticating")
             self._auth_attempts += 1
-            self._auth.connect(self)
+            self.auth.connect(self)
             self._auth_attempts = 0
 
     def _refresh_token(self, resp: Response):

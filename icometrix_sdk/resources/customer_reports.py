@@ -1,6 +1,6 @@
 import logging
 from time import sleep
-from typing import Optional
+from typing import Optional, Dict, List
 
 from icometrix_sdk.exceptions import IcometrixDataImportException
 from icometrix_sdk.models.base import PaginatedResponse
@@ -87,3 +87,27 @@ class CustomerReports:
             if count >= max_count:
                 raise IcometrixDataImportException(f"Failed to find a CustomerReport for {study_instance_uid}")
             sleep(self.polling_interval)
+
+    def wait_for_results(self, customer_report_uris: List[str]) -> List[CustomerReportEntity]:
+        """
+        Wait until processing has finished and the result files are available on the customer report
+
+        :param customer_report_uris: A list of customer uris
+        :return:
+        """
+
+        finished_customer_reports: Dict[str, CustomerReportEntity] = {}
+        while len(finished_customer_reports) != len(customer_report_uris):
+            for customer_report_uri in customer_report_uris:
+                if customer_report_uri in finished_customer_reports:
+                    continue
+
+                report = self.get_one(customer_report_uri)
+                if report.status != "Finished":
+                    print(f"Waiting for {report.study_instance_uid} to complete: {report.status}")
+                    continue
+
+                print(f"Finished {report.study_instance_uid}")
+                finished_customer_reports[report.uri] = report
+            sleep(self.polling_interval)
+        return [value for value in finished_customer_reports.values()]

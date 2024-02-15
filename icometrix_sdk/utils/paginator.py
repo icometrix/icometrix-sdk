@@ -1,9 +1,10 @@
 from inspect import signature
-from typing import Callable, Generic, TypeVar, Optional
+from typing import Callable, Generic, TypeVar, Optional, Iterable, Any, ParamSpec
 
 from icometrix_sdk.models.base import PaginatedResponse
 
 T = TypeVar("T")
+P = ParamSpec("P")
 
 
 def can_paginate(func: Callable):
@@ -14,7 +15,7 @@ def can_paginate(func: Callable):
     return issubclass(sig.return_annotation, PaginatedResponse)
 
 
-class PageIterator(Generic[T]):
+class PageIterator(Generic[T], Iterable):
     """
     An iterable object to iterate over paginated api responses
     """
@@ -55,7 +56,9 @@ class PageIterator(Generic[T]):
         return self._func(**self._op_kwargs)
 
 
-def get_paginator(func: Callable, page_size: Optional[int] = 50, starting_index: Optional[int] = 0, **kwargs):
+def get_paginator(func: Callable[..., PaginatedResponse[T]],
+                  page_size: Optional[int] = 50,
+                  starting_index: Optional[int] = 0, **kwargs) -> PageIterator[T]:
     """
     Create paginator object for an operation.
 
@@ -70,12 +73,11 @@ def get_paginator(func: Callable, page_size: Optional[int] = 50, starting_index:
         The size of the pages
     :param starting_index:
         The starting page
-    :returns: Iterator
+    :returns: A PageIterator
     """
     if not can_paginate(func):
         raise ValueError(f"Function '{func.__name__}' can't be paginated")
 
-    sig = signature(func)
-    return iter(
-        PageIterator[sig.return_annotation](func, op_kwargs=kwargs, page_size=page_size, starting_index=starting_index)
-    )
+    # sig = signature(func)
+    return PageIterator[T](func, op_kwargs=kwargs, page_size=page_size,
+                           starting_index=starting_index)
