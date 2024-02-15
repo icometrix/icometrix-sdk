@@ -3,6 +3,7 @@ from typing import Optional, Union
 
 from pydantic import field_validator
 
+from exceptions import IcometrixInvalidInputDataException
 from icometrix_sdk.models.base import BackendEntity, DicomModality
 
 
@@ -32,4 +33,5 @@ class StudyEntity(BackendEntity):
         if value.isdigit() and int(value) > 0 and len(value) == 8:
             return value
         else:
-            raise "Study date does not follow DICOM format"
+            raise IcometrixInvalidInputDataException(
+                "Study date does not follow DICOM format (e.g. 20220117)")

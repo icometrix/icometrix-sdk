@@ -20,3 +20,7 @@ class IcometrixAuthException(IcometrixException):
 
 class IcometrixDataImportException(IcometrixException):
     fmt = "Dicom import failed"
+
+
+class IcometrixInvalidInputDataException(IcometrixException):
+    fmt = "Data validation failed"
