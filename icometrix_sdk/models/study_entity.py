@@ -29,4 +29,7 @@ class StudyEntity(BackendEntity):
 
     @field_validator("study_date")
     def is_valid_study_date(cls, value):
-        return value.isdigit() and int(value) > 0
+        if value.isdigit() and int(value) > 0 and len(value) == 8:
+            return value
+        else:
+            raise "Study date does not follow DICOM format"
