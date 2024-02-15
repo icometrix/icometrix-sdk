@@ -26,7 +26,8 @@ release = __version__
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
 extensions = [
-    "sphinx.ext.autodoc"
+    "sphinx.ext.autodoc",
+    "sphinxcontrib.mermaid"
 ]
 
 # sphinx.ext.autodoc options

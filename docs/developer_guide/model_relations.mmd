@@ -1,0 +1,11 @@
+erDiagram
+   USERS }|--|{ PROJECTS : "has access to"
+   PROJECTS ||--|{ PATIENTS : contains
+   PATIENTS ||--|{ STUDIES : contains
+   STUDIES ||--|{ SERIES : contains
+   SERIES ||--|{ DICOMS : contains
+   STUDIES ||--|{ PIPELINE-RESULT : has
+   PIPELINE-RESULTS ||--|{ CUSTOMER-RESULTS : has
+   PATIENTS ||--|{ PIPELINE-LONG-RESULTS : has
+   PIPELINE-LONG-RESULTS ||--|{ CUSTOMER-LONG-RESULTS : has
+   STUDIES ||--|| CUSTOMER-REPORTS : has

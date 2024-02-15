@@ -3,9 +3,10 @@ Models
 
 .. toctree::
 
-    customer_report
-    patient
-    project
-    upload
     user
+    project
+    patient
+    upload
+    customer_result
+    customer_report
     base

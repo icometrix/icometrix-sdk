@@ -20,4 +20,13 @@ Collections
 -----------
 
 When fetching a collection of models from the API; you will always get a subset of that collection in combination with
+<<<<<<< HEAD
 some extra meta data. See: :doc:`paginators`
+
+Relations
+---------
+
+High level overview of the relations between the available entities
+
+.. mermaid:: model_relations.mmd
+
