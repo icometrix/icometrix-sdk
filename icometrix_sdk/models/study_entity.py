@@ -3,7 +3,7 @@ from typing import Optional, Union
 
 from pydantic import field_validator
 
-from exceptions import IcometrixInvalidInputDataException
+from icometrix_sdk.exceptions import IcometrixInvalidInputDataException
 from icometrix_sdk.models.base import BackendEntity, DicomModality
 
 
