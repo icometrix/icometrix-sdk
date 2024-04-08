@@ -2,20 +2,30 @@ import os
 from io import BytesIO
 
 import pydicom
-from pydicom import FileDataset
+from pydicom import FileDataset, Dataset
 from pydicom.errors import InvalidDicomError
 
 from icometrix_sdk import IcometrixApi
+from icometrix_sdk.anonymizer.anonymizer import Anonymizer
+from icometrix_sdk.anonymizer.policy import policy, group_policy
 from icometrix_sdk.models.upload_entity import StartUploadDto
-from icometrix_sdk.utils.anonymizer import Anonymizer
-from icometrix_sdk.utils.hash_factory import SHA3
+from icometrix_sdk.anonymizer.hash_factory import SHA3, HashFactory
 
 PROJECT_ID = "uuid"
 DICOM_DIR_PATH = "<path>"
 
+# file_paths = ["IM-0007-0106.dcm"]
+#
+# hash_algo = HashFactory.create_hash_method("ico_md5")
+# anon = AnonymizerP(policy, group_policy, hash_algo)
+#
+# for file_path in file_paths:
+#     dataset = pydicom.dcmread(file_path)
+#     anon.anonymize(dataset).save_as(f"anon-{file_path}")
+
 if __name__ == '__main__':
-    hash_method = SHA3(size=512)
-    anonymizer = Anonymizer(hash_method)
+    hash_algo = HashFactory.create_hash_method("ico_md5")
+    anonymizer = Anonymizer(policy, group_policy, hash_algo)
 
     os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
 
@@ -40,7 +50,7 @@ if __name__ == '__main__':
             except InvalidDicomError:
                 continue
 
-            anonymized_dicom: FileDataset = anonymizer.anonymize(dicom_file)
+            anonymized_dicom: Dataset = anonymizer.anonymize(dicom_file)
             buffer = BytesIO()
             anonymized_dicom.save_as(buffer)
             buffer.seek(0)

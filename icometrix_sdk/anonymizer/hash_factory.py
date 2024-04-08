@@ -42,7 +42,6 @@ class SHA3(HashMethod):
         self.size = size
 
     def calculate_hash_from_bytes(self, input_obj: bytes):
-        hash_obj = None
         if self.size == 224:
             hash_obj = hashlib.sha3_224(input_obj)
         elif self.size == 256:
@@ -71,5 +70,5 @@ class IcometrixMD5(HashMethod):
 
     def calculate_hash_from_bytes(self, input_obj: bytes):
         md5_hash = MD5().calculate_hash_from_bytes(input_obj)
-        decimized = str(int(md5_hash, base=16))
+        decimized = str(int(md5_hash, base=16))[:10]
         return decimized
