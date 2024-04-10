@@ -1,15 +1,28 @@
+import logging
+
 from pydicom import Dataset, DataElement
 
+from icometrix_sdk.anonymizer.exceptions import PolicyException
 from icometrix_sdk.anonymizer.hash_factory import HashMethod
 from icometrix_sdk.anonymizer.models import Policy, TagPolicy
 from icometrix_sdk.anonymizer.utils import remove_tag, replace_tag, hash_tag, _is_pixel_data, round_tag, \
-    add_de_identification_tags
+    add_de_identification_tags, is_tag, is_group
+
+logger = logging.getLogger(__name__)
 
 
 class Anonymizer:
     default_policy: TagPolicy = TagPolicy("remove", "Default")
 
     def __init__(self, policy: Policy, group_policy: Policy, hash_algo: HashMethod):
+        for tag in policy:
+            if not is_tag(tag):
+                raise PolicyException("Tag policy contains an invalid tag")
+
+        for group in group_policy:
+            if not is_group(group):
+                raise PolicyException("Group policy contains an invalid group")
+
         self.policy = policy
         self.group_policy = group_policy
         self.hash_algo = hash_algo
@@ -28,7 +41,7 @@ class Anonymizer:
             # Apply the group policy
             elif element.tag.group in self.group_policy:
                 tag_policy = self.group_policy[element.tag.group]
-                self._apply_policy_to_tag(element, tag_policy)
+                self._apply_policy_to_group(element, tag_policy)
 
             # Apply the default policy
             else:
@@ -36,7 +49,17 @@ class Anonymizer:
 
         return add_de_identification_tags(dataset)
 
+    def _apply_policy_to_group(self, element: DataElement, tag_policy: TagPolicy):
+        try:
+            self._apply_policy_to_tag(element, tag_policy)
+        except (AttributeError, ValueError):
+            logger.debug("Failed to apply group action '%d' to %s %s.", tag_policy.action,
+                         element.tag, element.name)
+            return
+
     def _apply_policy_to_tag(self, element: DataElement, tag_policy: TagPolicy):
+        logger.debug('%d %s: %s', element.tag, element.name, tag_policy.action)
+
         if tag_policy.action == "keep":
             return
         elif tag_policy.action == "remove":
@@ -47,3 +70,5 @@ class Anonymizer:
             hash_tag(element, self.hash_algo)
         elif tag_policy.action == "round":
             round_tag(element)
+        else:
+            raise ValueError("Unknown tag policy action")

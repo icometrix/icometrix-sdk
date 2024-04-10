@@ -1,28 +1,23 @@
 import hashlib
 from abc import abstractmethod
-from typing import Literal
+from typing import get_args
 
-
-class UnsupportedAlgorithmException(Exception):
-    pass
-
-
-class UnsupportedSizeException(Exception):
-    pass
+from icometrix_sdk.anonymizer.exceptions import HashAlgorithmException, HashSizeException
+from icometrix_sdk.anonymizer.models import HashAlgo
 
 
 class HashFactory:
     @staticmethod
-    def create_hash_method(algo: Literal["sha3", "md5", "ico_md5"], size=256, salt=None):
+    def create_hash_method(algo: HashAlgo, size=256, salt=None):
         if algo == "sha3":
             return SHA3(size)
         elif algo == "md5":
             return MD5()
-        elif algo == "ico_md5":
+        elif algo == "short_md5":
             return IcometrixMD5()
         else:
-            raise UnsupportedAlgorithmException(f"No algorithm named {algo} is supported, "
-                                                f"valid values are \"sha3\", \'md5\"")
+            supported = ", ".join(get_args(HashAlgo))
+            raise HashAlgorithmException(f"No algorithm named {algo} is supported, valid values are {supported}")
 
 
 class HashMethod:
@@ -51,8 +46,8 @@ class SHA3(HashMethod):
         elif self.size == 512:
             hash_obj = hashlib.sha3_512(input_obj)
         else:
-            raise UnsupportedSizeException(f"SHA3 does not support size {self.size}, "
-                                           f"valid values are (224, 256, 384, 512)")
+            raise HashSizeException(f"SHA3 does not support size {self.size}, "
+                                    f"valid values are (224, 256, 384, 512)")
 
         digest = hash_obj.hexdigest()
         return digest

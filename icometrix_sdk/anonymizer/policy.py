@@ -16,6 +16,7 @@ policy: Policy = {
     0x300a0013: TagPolicy("hash", "DoseReferenceUID"),
 
     0x00100010: TagPolicy("hash", "PatientName"),
+    # 0x00100010: TagPolicy("replace", "PatientName", "test"),
     0x00080090: TagPolicy("keep", "ReferringPhysicianName"),
 
     0x00080050: TagPolicy("keep", "AccessionNumber"),
