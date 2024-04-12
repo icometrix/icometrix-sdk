@@ -1,11 +1,14 @@
 from pathlib import Path
 
 import pydicom
+from pydicom.config import WARN
 from pydicom.data import get_testdata_files
 
 from icometrix_sdk.anonymizer.anonymizer import Anonymizer
 from icometrix_sdk.anonymizer.hash_factory import HashFactory
-from icometrix_sdk.anonymizer.policy import policy, group_policy
+from icometrix_sdk.anonymizer.policy import policy_sha, group_policy
+
+# set env VALIDATION_MODE to 1 or 0, there are some invalid DICOMs in this set
 
 # These files are included in the pydicom test dataset to test failed dcmread
 INVALID_FILES = [
@@ -22,8 +25,8 @@ def get_dicom_test_files():
     return [x for x in all_files if Path(x).name not in INVALID_FILES]
 
 
-hash_algo = HashFactory.create_hash_method("short_md5")
-anon = Anonymizer(policy, group_policy, hash_algo)
+hash_algo = HashFactory.create_hash_method("md5")
+anon = Anonymizer(policy_sha, group_policy, hash_algo)
 
 for file_path in get_dicom_test_files():
     dataset = pydicom.dcmread(f"{file_path}")

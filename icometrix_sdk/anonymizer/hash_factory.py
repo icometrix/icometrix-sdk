@@ -8,13 +8,13 @@ from icometrix_sdk.anonymizer.models import HashAlgo
 
 class HashFactory:
     @staticmethod
-    def create_hash_method(algo: HashAlgo, size=256, salt=None):
+    def create_hash_method(algo: HashAlgo, size=512, salt=None):
         if algo == "sha3":
             return SHA3(size)
         elif algo == "md5":
             return MD5()
         elif algo == "short_md5":
-            return IcometrixMD5()
+            return ShortMD5()
         else:
             supported = ", ".join(get_args(HashAlgo))
             raise HashAlgorithmException(f"No algorithm named {algo} is supported, valid values are {supported}")
@@ -58,12 +58,14 @@ class MD5(HashMethod):
         return hashlib.md5(input_obj, usedforsecurity=True).hexdigest()
 
 
-class IcometrixMD5(HashMethod):
+class ShortMD5(HashMethod):
     """
     MD5 that is re-based to base10.
     """
 
+    def calculate_hash(self, input_obj: str, encoding='utf-8') -> str:
+        return self.calculate_hash_from_bytes(input_obj.encode(encoding))
+
     def calculate_hash_from_bytes(self, input_obj: bytes):
         md5_hash = MD5().calculate_hash_from_bytes(input_obj)
-        decimized = str(int(md5_hash, base=16))[:10]
-        return decimized
+        return str(int(md5_hash, base=16))[:10]

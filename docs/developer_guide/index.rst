@@ -6,3 +6,4 @@ Developer Guide
    paginators
    session
    models
+   anonymization

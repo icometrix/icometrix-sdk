@@ -6,11 +6,9 @@ from pydicom import Dataset
 from pydicom.data import get_testdata_file
 
 from icometrix_sdk.anonymizer.anonymizer import Anonymizer
-from icometrix_sdk.anonymizer.constants import PATIENT_IDENTITY_REMOVED_TAG, DE_IDENTIFICATION_METHOD_TAG
 from icometrix_sdk.anonymizer.hash_factory import HashMethod, HashFactory
 from icometrix_sdk.anonymizer.models import Policy, TagPolicy
-from icometrix_sdk.anonymizer.tests.utils import _ignore_tag, _split_group_tags
-from icometrix_sdk.anonymizer.utils import _is_pixel_data
+from icometrix_sdk.anonymizer.tests.utils import _ignore_tag, _split_group_tags, replace_by_value
 
 
 @pytest.fixture(scope="module")
@@ -60,37 +58,3 @@ def test_hash_policy(hash_algo: HashMethod, test_dataset: Dataset):
         if not element.value or element.VR in un_hashable_vrs:
             continue
         assert element.value != original[element.tag].value
-
-
-replace_group: Policy = {
-    0x00100010: TagPolicy("replace", "ReplaceGroup", "Panda"),
-}
-
-#
-# def test_replace_policy(hash_algo: HashMethod, test_dataset: Dataset):
-#     anon = Anonymizer(replace_values, {}, hash_algo)
-#     anon.anonymize(test_dataset)
-#     for tag in replace_values:
-#         assert test_dataset[tag].value == replace_values[tag].value
-#
-#
-# def test_invalid_replace_policy(hash_algo: HashMethod, test_dataset: Dataset):
-#     with pytest.raises(ValueError):
-#         anon = Anonymizer({0x00100010: TagPolicy("replace", "PatientName", 10)}, {}, hash_algo)
-#         anon.anonymize(test_dataset)
-#
-#     with pytest.raises(ValueError):
-#         anon2 = Anonymizer({0x00080080: TagPolicy("replace", "InstitutionName")}, {}, hash_algo)
-#         anon2.anonymize(test_dataset)
-#
-#
-# round_values: Policy = {
-#     0x00100030: TagPolicy("round", "PatientBirthDate"),
-# }
-#
-#
-# def test_round_policy(hash_algo: HashMethod, test_dataset: Dataset):
-#     anon = Anonymizer(round_values, {}, hash_algo)
-#     anon.anonymize(test_dataset)
-#     for tag in round_values:
-#         assert test_dataset[tag].value.endswith("0101")

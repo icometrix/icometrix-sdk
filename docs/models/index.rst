@@ -9,4 +9,5 @@ Models
     upload
     customer_result
     customer_report
+    anonymizer
     base
