@@ -19,9 +19,9 @@ Sometimes it is needed to loop over all items in a collection, the SDK has a hel
     from icometrix_sdk import IcometrixApi
     from icometrix_sdk.utils.paginator import get_paginator
 
-    PROJECT_ID = "<a-project-uuid>"
+    PROJECT_ID = "<your-project-uuid>"
 
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = "..."
 
     # Initialize the icometrix API
     ico_api = IcometrixApi()
