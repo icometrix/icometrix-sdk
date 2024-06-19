@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import Literal, Callable
+
 from pydicom import DataElement, Dataset
 
 Action = Literal["keep", "empty", "remove", "replace", "hash", "round"]

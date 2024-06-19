@@ -6,11 +6,12 @@ from time import sleep
 from requests.adapters import DEFAULT_POOLSIZE
 
 from icometrix_sdk.exceptions import IcometrixException, IcometrixDataImportException
+from icometrix_sdk.logger import logger_name
 from icometrix_sdk.models.base import PaginatedResponse
-from icometrix_sdk.models.upload_entity import StartUploadDto, UploadEntity, UploadEntityFiles
+from icometrix_sdk.models.upload_entity import StartUploadDto, UploadEntity, UploadEntityFiles, StudyUploadEntity
 from icometrix_sdk.utils.requests_api_client import ApiClient
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(logger_name)
 
 
 class Uploads:
@@ -37,6 +38,16 @@ class Uploads:
         """
         resp = self._api.get(upload_uri)
         return UploadEntity(**resp)
+
+    def get_studies_for_upload(self, upload_folder_uri: str, **kwargs) -> PaginatedResponse[StudyUploadEntity]:
+        """
+        Get studies created by this upload (first wait till import is finished)
+
+        :param upload_folder_uri: the folder uri of the upload (UploadEntry.folder_uri)
+        :return:
+        """
+        page = self._api.get(f"{upload_folder_uri}/study-uploads", **kwargs)
+        return PaginatedResponse[StudyUploadEntity](**page)
 
     def get_uploaded_files(self, upload_folder_uri: str, **kwargs) -> UploadEntityFiles:
         """
@@ -77,10 +88,27 @@ class Uploads:
             Setting this boolean to true will still complete the upload, even if a file failed to upload
         :return:
         """
+        # Create upload entry
         upload = self.start_upload(project_id, options)
+        # Upload all files in directory
+        self.upload_all_files_in_dir(upload.uri, dicom_dir_path, complete_on_error)
+        # Once all files have been uploaded, signal that they are all there and start the import/processing
+        return self.complete_upload(upload.uri)
 
+    def upload_all_files_in_dir(self, upload_uri: str, dicom_dir_path: str, complete_on_error=False) -> int:
+        """
+        A higher level function to upload all DICOMs of a directory AND all of its subdirectories
+
+        :param upload_uri:
+            the URI of the upload entry
+        :param dicom_dir_path:
+            The path to the directory
+        :param complete_on_error:
+            Setting this boolean to true will still complete the upload, even if a file failed to upload
+        :return:
+        """
+        futures = []
         with ThreadPoolExecutor(DEFAULT_POOLSIZE) as executor:
-            futures = []
             # Loop over all files in a DIR and upload them to the before created upload entry
             for path, subdirs, files in os.walk(dicom_dir_path):
                 for name in files:
@@ -89,7 +117,7 @@ class Uploads:
 
                     file_path = os.path.join(path, name)
                     logger.info(f"Uploading {file_path}")
-                    future = executor.submit(self.upload_dicom_path, upload.uri, file_path)
+                    future = executor.submit(self.upload_dicom_path, upload_uri, file_path)
                     futures.append(future)
 
             # Wait for all threads to complete and handle exceptions
@@ -101,9 +129,7 @@ class Uploads:
                     logging.error(f"Exception in one of the threads: {e}")
                     if not complete_on_error:
                         raise e
-
-        # Once all files have been uploaded, signal that they are all there and start the import/processing
-        return self.complete_upload(upload.uri)
+        return len(futures)
 
     def start_upload(self, project_id: str, start_upload: StartUploadDto, **kwargs) -> UploadEntity:
         """
@@ -113,7 +139,7 @@ class Uploads:
         :param start_upload: Extra upload options
         :return:
         """
-        body = start_upload.model_dump()
+        body = start_upload.model_dump(by_alias=True)
         resp = self._api.post(f"/uploads-service/api/v1/projects/{project_id}/multi-upload", data=body, **kwargs)
         return UploadEntity(**resp)
 
@@ -159,8 +185,8 @@ class Uploads:
         upload = self.get_one(upload_uri)
         while upload.status != "import_success":
             upload = self.get_one(upload.folder_uri)
-            logger.info(f"Waiting for import to complete: {upload.status}")
+            logger.info(upload)
             if upload.status == "import_failed":
-                IcometrixDataImportException(f"Import failed: {upload.errors[0]}")
+                raise IcometrixDataImportException(f"Import failed: {upload}")
             sleep(self.polling_interval)
         return upload

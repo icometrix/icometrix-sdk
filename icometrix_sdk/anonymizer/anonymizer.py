@@ -7,8 +7,9 @@ from icometrix_sdk.anonymizer.hash_factory import HashMethod
 from icometrix_sdk.anonymizer.models import Policy, TagPolicy
 from icometrix_sdk.anonymizer.utils import remove_tag, replace_tag, hash_tag, _is_pixel_data, round_tag, \
     add_de_identification_tags, is_tag, is_group, empty_tag
+from icometrix_sdk.logger import logger_name
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(logger_name)
 
 
 class Anonymizer:

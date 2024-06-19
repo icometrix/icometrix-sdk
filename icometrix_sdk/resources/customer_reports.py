@@ -3,12 +3,13 @@ from time import sleep
 from typing import Optional, Dict, List
 
 from icometrix_sdk.exceptions import IcometrixDataImportException
+from icometrix_sdk.logger import logger_name
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.customer_report_entity import CustomerReportEntity, CustomerReportFile
 from icometrix_sdk.utils.paginator import get_paginator
 from icometrix_sdk.utils.requests_api_client import ApiClient
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(logger_name)
 
 
 class CustomerReports:

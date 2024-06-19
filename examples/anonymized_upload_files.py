@@ -7,7 +7,7 @@ from pydicom.errors import InvalidDicomError
 
 from icometrix_sdk import IcometrixApi
 from icometrix_sdk.anonymizer.anonymizer import Anonymizer
-from icometrix_sdk.anonymizer.policy import policy, group_policy
+from icometrix_sdk.anonymizer.policy import group_policy, policy_md5
 from icometrix_sdk.models.upload_entity import StartUploadDto
 from icometrix_sdk.anonymizer.hash_factory import SHA3, HashFactory
 
@@ -16,7 +16,7 @@ DICOM_DIR_PATH = "<path>"
 
 # file_paths = ["IM-0007-0106.dcm"]
 #
-# hash_algo = HashFactory.create_hash_method("ico_md5")
+# hash_algo = HashFactory.create_hash_method("short_md5")
 # anon = AnonymizerP(policy, group_policy, hash_algo)
 #
 # for file_path in file_paths:
@@ -24,8 +24,8 @@ DICOM_DIR_PATH = "<path>"
 #     anon.anonymize(dataset).save_as(f"anon-{file_path}")
 
 if __name__ == '__main__':
-    hash_algo = HashFactory.create_hash_method("ico_md5")
-    anonymizer = Anonymizer(policy, group_policy, hash_algo)
+    hash_algo = HashFactory.create_hash_method("short_md5")
+    anonymizer = Anonymizer(policy_md5, group_policy, hash_algo)
 
     os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
 

@@ -8,7 +8,7 @@ from pydicom.data import get_testdata_file
 from icometrix_sdk.anonymizer.anonymizer import Anonymizer
 from icometrix_sdk.anonymizer.hash_factory import HashMethod, HashFactory
 from icometrix_sdk.anonymizer.models import Policy, TagPolicy
-from icometrix_sdk.anonymizer.tests.utils import _ignore_tag, _split_group_tags, replace_by_value
+from icometrix_sdk.anonymizer.tests.utils import _ignore_tag, _split_group_tags
 
 
 @pytest.fixture(scope="module")

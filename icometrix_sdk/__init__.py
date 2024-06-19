@@ -4,15 +4,19 @@ from typing import Optional
 
 from icometrix_sdk.authentication import PasswordAuthentication, AuthenticationMethod, get_auth_method
 from icometrix_sdk.exceptions import IcometrixConfigException
-from icometrix_sdk.resources.customer_reports import CustomerReports
 from icometrix_sdk.models.base import PaginatedResponse
+from icometrix_sdk.resources.customer_reports import CustomerReports
 from icometrix_sdk.resources.customer_results import CustomerResults
+from icometrix_sdk.resources.jobs import Jobs
 from icometrix_sdk.resources.patients import Patients
+from icometrix_sdk.resources.pipeline_results import PipelineResults
 from icometrix_sdk.resources.profile import Profile
 from icometrix_sdk.resources.projects import Projects
+from icometrix_sdk.resources.series import Series
+from icometrix_sdk.resources.studies import Studies
 from icometrix_sdk.resources.uploads import Uploads
-from icometrix_sdk.utils.requests_api_client import RequestsApiClient
 from icometrix_sdk.utils.api_client import ApiClient
+from icometrix_sdk.utils.requests_api_client import RequestsApiClient
 
 
 def get_api_client() -> RequestsApiClient:
@@ -38,6 +42,8 @@ class IcometrixApi:
     profile: Profile
     projects: Projects
     patients: Patients
+    studies: Studies
+    series: Series
     uploads: Uploads
     customer_reports: CustomerReports
     customer_results: CustomerResults
@@ -52,7 +58,10 @@ class IcometrixApi:
         self.profile = Profile(self._api_client)
         self.projects = Projects(self._api_client)
         self.patients = Patients(self._api_client)
+        self.studies = Studies(self._api_client)
+        self.series = Series(self._api_client)
         self.uploads = Uploads(self._api_client)
+        self.pipeline_results = PipelineResults(self._api_client)
         self.customer_reports = CustomerReports(self._api_client)
         self.customer_results = CustomerResults(self._api_client)
 

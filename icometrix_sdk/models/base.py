@@ -1,5 +1,8 @@
-from pydantic import BaseModel
+from datetime import datetime, timezone
 from typing import Generic, TypeVar, List, Optional, Iterator, Literal
+
+from pydantic import BaseModel, BeforeValidator
+from typing_extensions import Annotated
 
 T = TypeVar("T")
 
@@ -9,11 +12,29 @@ DicomModality = Literal[
     "IVUS", "SMR", "RTIMAGE", "RTDOSE", "RTSTRUCT", "RTPLAN", "RTRECORD"]
 
 
+def utc_datetime_parser(v: str | datetime | None) -> datetime | None:
+    if not v:
+        return None
+    if isinstance(v, datetime):
+        return v.replace(tzinfo=timezone.utc)
+
+    datetime_format = "%Y-%m-%dT%H:%M:%S.%f"
+    input_datetime = datetime.strptime(v, datetime_format)
+    return input_datetime.replace(tzinfo=timezone.utc)
+
+
+# Does not work without the None
+utc_datetime = Annotated[
+    datetime | None,
+    BeforeValidator(utc_datetime_parser),
+]
+
+
 class BackendEntity(BaseModel):
     id: str
     uri: Optional[str] = None
-    update_timestamp: str
-    creation_timestamp: str
+    update_timestamp: utc_datetime
+    creation_timestamp: utc_datetime
 
 
 class PaginatedResultSet(BaseModel):
@@ -56,3 +77,11 @@ class PaginatedResponse(BaseModel, Generic[T]):
 
     def __len__(self) -> int:
         return len(self.results)
+
+
+class TestEntity(BaseModel):
+    update_timestamp: Optional[utc_datetime] = None
+
+
+test = TestEntity(update_timestamp='')
+print(test)

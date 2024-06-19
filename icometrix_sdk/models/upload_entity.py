@@ -10,20 +10,34 @@ class StartUploadDto(BaseModel):
 
 
 class UploadEntity(BackendEntity):
-    status: str
+    status: Optional[str] = None
     folder_uri: str
     type: str
     compressed: Optional[Union[str, bool]] = None
     logs: List[str]
-    errors: List
+    errors: List[str]
     icobrain_report_type: str
     retry_count: Optional[Union[str, int]] = None
-    id: str
     project_id: str
-    creation_timestamp: str
-    update_timestamp: str
-    file_name: str
-    uri: str
+
+    def __str__(self):
+        latest_log = self.logs[-1] if self.logs else '-'
+        log_message = (
+            f"Upload ID: {self.id[:8]} | "
+            f"Status: {self.status} | "
+            f"Logs: {latest_log}"
+        )
+        return log_message
+
+    def __repr__(self):
+        return str(self)
+
+
+class StudyUploadEntity(BackendEntity):
+    project_id: str
+    patient_id: str
+    study_id: str
+    upload_id: str
 
 
 class UploadEntityFiles(BaseModel):

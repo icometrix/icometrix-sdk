@@ -1,19 +1,18 @@
 from typing import Optional, List
 
-from pydantic import BaseModel
+from icometrix_sdk.models.base import BackendEntity
 
 
-class Role(BaseModel):
+class Role(BackendEntity):
     id: str
     name: str
     user_id: str
     entity_id: str
     entity_type: str
-    creation_timestamp: str
     second_entity_id: Optional[str] = None
 
 
-class User(BaseModel):
+class User(BackendEntity):
     id: str
     firstname: str
     lastname: str

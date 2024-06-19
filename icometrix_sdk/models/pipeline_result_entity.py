@@ -1,4 +1,4 @@
-from typing import Optional, Literal, Union
+from typing import Optional, Literal, Union, Any
 
 from icometrix_sdk.models.base import BackendEntity
 
@@ -30,7 +30,7 @@ PipelineResultJobType = Literal[
 class PipelineResultEntity(BackendEntity):
     image: str
     job_id: str
-    results: any
+    results: Any
     job_mode: Optional[Union[PipelineResultJobType, str]] = None
     pipeline: Union[PipelineResultType, str]
     study_id: str

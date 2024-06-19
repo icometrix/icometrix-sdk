@@ -24,3 +24,11 @@ class IcometrixDataImportException(IcometrixException):
 
 class IcometrixInvalidInputDataException(IcometrixException):
     fmt = "Data validation failed"
+
+
+class WaitTimeoutException(IcometrixException):
+    ...
+
+
+class IcometrixUnusableReportException(IcometrixException):
+    pass

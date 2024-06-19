@@ -1,10 +1,9 @@
-import datetime
-from typing import Optional, Union
+from typing import Optional
 
 from pydantic import field_validator
 
 from icometrix_sdk.exceptions import IcometrixInvalidInputDataException
-from icometrix_sdk.models.base import BackendEntity, DicomModality
+from icometrix_sdk.models.base import BackendEntity, DicomModality, utc_datetime
 
 
 class StudyEntity(BackendEntity):
@@ -15,7 +14,7 @@ class StudyEntity(BackendEntity):
     study_date: str  # DICOM formatted study date, e.g. 20100513
     study_note: Optional[str] = None
     study_time: str  # DICOM formatted study time
-    patient_age: Optional[Union[int, str]] = None  # Can be something like 035Y
+    patient_age: Optional[int | str] = None  # Can be something like 035Y
     manufacturer: Optional[str] = None
     accession_number: Optional[str] = None
     institution_name: Optional[str] = None
@@ -26,7 +25,7 @@ class StudyEntity(BackendEntity):
     icobrain_report_type: Optional[str] = None
     magnetic_field_strength: Optional[str] = None
     manufacturer_model_name: Optional[str] = None
-    imported_timestamp: Optional[datetime.datetime] = None
+    imported_timestamp: Optional[utc_datetime] = None
 
     @field_validator("study_date")
     def is_valid_study_date(cls, value):

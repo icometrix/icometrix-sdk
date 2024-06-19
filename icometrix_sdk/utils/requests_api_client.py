@@ -15,12 +15,13 @@ from icometrix_sdk._version import __version__
 from icometrix_sdk.authentication import AuthenticationMethod
 from icometrix_sdk.exceptions import IcometrixHttpException, IcometrixParseException, IcometrixConfigException, \
     IcometrixAuthException
+from icometrix_sdk.logger import logger_name
 from icometrix_sdk.utils.api_client import ApiClient
 from icometrix_sdk.utils.file_upload import create_multipart
 
 HTTP_TIMEOUT = os.getenv("HTTP_TIMEOUT", 120)
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(logger_name)
 
 
 class RequestsApiClient(ApiClient):

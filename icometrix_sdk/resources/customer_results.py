@@ -1,10 +1,11 @@
 import logging
 
+from icometrix_sdk.logger import logger_name
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.models.customer_result_entity import CustomerResultEntity
 from icometrix_sdk.utils.requests_api_client import ApiClient
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(logger_name)
 
 
 class CustomerResults:

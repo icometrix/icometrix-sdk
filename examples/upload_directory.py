@@ -17,4 +17,12 @@ if __name__ == '__main__':
 
     # Upload a directory of DICOMs
     data = StartUploadDto(icobrain_report_type="icobrain_ms")
-    ico_api.uploads.upload_dicom_dir(PROJECT_ID, DICOM_DIR_PATH, data)
+    upload = ico_api.uploads.start_upload(PROJECT_ID, data)
+    ico_api.uploads.upload_dicom_dir(upload.uri, DICOM_DIR_PATH)
+
+    # Wait for data to be imported
+    upload = ico_api.uploads.wait_for_data_import(upload.folder_uri)
+
+    # Get imported studies
+    for uploaded_study in ico_api.uploads.get_studies_for_upload(upload_folder_uri=upload.folder_uri):
+        print(uploaded_study.study_id)

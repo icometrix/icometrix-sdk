@@ -1,6 +1,6 @@
 from typing import Optional
 
-from icometrix_sdk.models.base import BackendEntity
+from icometrix_sdk.models.base import BackendEntity, utc_datetime
 
 
 class ProjectEntity(BackendEntity):
@@ -12,4 +12,4 @@ class ProjectEntity(BackendEntity):
     display_name: Optional[str] = None
     project_type: Optional[str] = None
     processing_type: Optional[str] = None
-    imported_timestamp: Optional[str] = None
+    imported_timestamp: Optional[utc_datetime] = None

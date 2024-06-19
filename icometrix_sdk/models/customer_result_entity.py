@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+
 from icometrix_sdk.models.base import BackendEntity
 
 

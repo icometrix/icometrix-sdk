@@ -3,8 +3,8 @@ from pydicom import DataElement
 from pydicom.valuerep import MAX_VALUE_LEN
 
 from icometrix_sdk.anonymizer.hash_factory import HashFactory, HashMethod
-from icometrix_sdk.anonymizer.utils import hash_tag
 from icometrix_sdk.anonymizer.utils import _cut_max_length
+from icometrix_sdk.anonymizer.utils import hash_tag
 
 
 @pytest.fixture(scope="module")

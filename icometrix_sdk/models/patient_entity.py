@@ -1,5 +1,6 @@
 from typing import Optional, Union
-from icometrix_sdk.models.base import BackendEntity
+
+from icometrix_sdk.models.base import BackendEntity, utc_datetime
 
 
 class PatientEntity(BackendEntity):
@@ -22,7 +23,7 @@ class PatientEntity(BackendEntity):
     project_country: Optional[str] = None
     msbase_patient_id: Optional[str] = None
     unique_patient_id: Optional[str] = None
-    imported_timestamp: Optional[str] = None
+    imported_timestamp: Optional[utc_datetime] = None
     patient_birth_date: str
     patient_handedness: Optional[str] = None
     encrypted_patient_id: Optional[str] = None

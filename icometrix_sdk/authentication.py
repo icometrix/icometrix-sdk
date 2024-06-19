@@ -2,8 +2,6 @@ import os
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from requests import Request
-
 from icometrix_sdk.exceptions import IcometrixConfigException
 from icometrix_sdk.utils.api_client import ApiClient
 

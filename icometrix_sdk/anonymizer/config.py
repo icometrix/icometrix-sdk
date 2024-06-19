@@ -1,4 +1,5 @@
 import os
+
 from pydicom.config import RAISE
 
 # Organization root, default to icometrix (https://dicom.nema.org/dicom/2013/output/chtml/part05/chapter_B.html)
