@@ -7,7 +7,6 @@ from icometrix_sdk.exceptions import IcometrixConfigException
 from icometrix_sdk.models.base import PaginatedResponse
 from icometrix_sdk.resources.customer_reports import CustomerReports
 from icometrix_sdk.resources.customer_results import CustomerResults
-from icometrix_sdk.resources.jobs import Jobs
 from icometrix_sdk.resources.patients import Patients
 from icometrix_sdk.resources.pipeline_results import PipelineResults
 from icometrix_sdk.resources.profile import Profile
