@@ -6,5 +6,6 @@ Developer Guide
    paginators
    session
    models
+   upload
    anonymization
    data_validation

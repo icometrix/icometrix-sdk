@@ -29,7 +29,7 @@ Next thing is to set the correct server region (icobrain-eu.icometrix.com, icobr
 
     from icometrix_sdk import IcometrixApi
 
-    SERVER = "https://icobrain-test.icometrix.com"
+    SERVER = "https://icobrain-{region}.icometrix.com"
 
 By default the icometrix_sdk will try to auto detect the authentication method. But we can
 also force a method e.g. password authentication. To do this import the PasswordAuthentication
@@ -39,7 +39,7 @@ method and pass it as a parameter to the IcometrixApi.
 
     from icometrix_sdk import IcometrixApi
 
-    SERVER = "https://icobrain-test.icometrix.com"
+    SERVER = "https://icobrain-{region}.icometrix.com"
 
     auth = PasswordAuthentication("example@company.com", os.environ["PASSWORD"])
     client = RequestsApiClient(SERVER, auth)
@@ -52,7 +52,7 @@ You can use :meth:`~icometrix_sdk.resources.profile.Profile.who_am_i` function t
 
     from icometrix_sdk import IcometrixApi
 
-    SERVER = "https://icobrain-test.icometrix.com"
+    SERVER = "https://icobrain-{region}.icometrix.com"
 
     auth = PasswordAuthentication("example@company.com", os.environ["PASSWORD"])
     client = RequestsApiClient(SERVER, auth)
