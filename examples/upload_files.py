@@ -1,6 +1,6 @@
 import os
 
-from icometrix_sdk import IcometrixApi
+from icometrix_sdk import IcometrixApi, Region
 from icometrix_sdk.models.upload_entity import StartUploadDto
 
 PROJECT_ID = "uuid"
@@ -10,7 +10,7 @@ DICOM_PATHS = [
 ]
 
 if __name__ == '__main__':
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = Region.EU.value
 
     # Initialize the icometrix API
     ico_api = IcometrixApi()

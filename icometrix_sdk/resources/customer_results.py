@@ -14,13 +14,24 @@ class CustomerResults:
 
     def get_all_for_study(self, study_uri: str, **kwargs) -> PaginatedResponse[CustomerResultEntity]:
         """
-        Get al customer reports for a project
+        Get al customer results for a study
 
         :param study_uri: The uri of a study
         :return: A Paginated response containing customer-results
         """
 
         page = self._api.get(f"{study_uri}/customer-results", **kwargs)
+        return PaginatedResponse[CustomerResultEntity](**page)
+
+    def get_all_for_patient(self, patient_uri: str, **kwargs) -> PaginatedResponse[CustomerResultEntity]:
+        """
+        Get al customer results for a patient
+
+        :param patient_uri: The uri of a patient
+        :return: A Paginated response containing customer-results
+        """
+
+        page = self._api.get(f"{patient_uri}/customer-results", **kwargs)
         return PaginatedResponse[CustomerResultEntity](**page)
 
     def get_all_for_pipeline_result(self, pipeline_result_uri: str, **kwargs) -> \

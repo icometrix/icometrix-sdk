@@ -19,6 +19,9 @@ def utc_datetime_parser(v: str | datetime | None) -> datetime | None:
         return v.replace(tzinfo=timezone.utc)
 
     datetime_format = "%Y-%m-%dT%H:%M:%S.%f"
+    if "+" in v:
+        datetime_format = "%Y-%m-%dT%H:%M:%S.%f%z"
+
     input_datetime = datetime.strptime(v, datetime_format)
     return input_datetime.replace(tzinfo=timezone.utc)
 
@@ -77,11 +80,3 @@ class PaginatedResponse(BaseModel, Generic[T]):
 
     def __len__(self) -> int:
         return len(self.results)
-
-
-class TestEntity(BaseModel):
-    update_timestamp: Optional[utc_datetime] = None
-
-
-test = TestEntity(update_timestamp='')
-print(test)

@@ -19,7 +19,10 @@ How to Perform Pre-Import Validation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To perform pre-import validation, you can list all the files within a given upload and verify that the expected files are present.
-This has to be done **before completing the upload**. (:meth:`~icometrix_sdk.resources.uploads.Uploads.complete_upload`)
+
+.. caution::
+
+    This has to be done **before completing the upload**. Reference :meth:`~icometrix_sdk.resources.uploads.Uploads.complete_upload`
 
 .. code-block:: python
 

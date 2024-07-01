@@ -1,4 +1,5 @@
 import logging
+import os
 from time import sleep
 from typing import Optional, Dict, List
 
@@ -38,7 +39,21 @@ class CustomerReports:
         resp = self._api.get(customer_report_uri)
         return CustomerReportEntity(**resp)
 
-    def download_customer_report_files(self, customer_report: CustomerReportEntity, out_path: Optional[str] = None):
+    def get_all_for_study(self, study_uri: str, **kwargs) -> PaginatedResponse[CustomerReportEntity]:
+        """
+        Get a single customer-report based on the customer-report uri
+
+        :param study_uri: the uri of the study
+        :return: A Paginated response containing customer-reports
+        """
+        study_uri = (study_uri
+                     .replace("/studies-service/", "/customer-reports-service/")
+                     .replace("/storage-service/", "/customer-reports-service/")
+                     .replace("/v1/", "/v2/"))
+        page = self._api.get(f"{study_uri}/customer-reports", **kwargs)
+        return PaginatedResponse[CustomerReportEntity](**page)
+
+    def download_customer_report_files(self, customer_report: CustomerReportEntity, out_path: str):
         """
         Download all files created by icobrain for a customer_report
 
@@ -46,6 +61,9 @@ class CustomerReports:
         :param out_path: A folder path to write the files to
         :return:
         """
+        if not os.path.isdir(out_path):
+            os.mkdir(out_path)
+
         for report_file in customer_report.report_files:
             out_path_file = f"{out_path}/{report_file.name}"
             self.download_customer_report_file(report_file, out_path_file)
@@ -60,7 +78,7 @@ class CustomerReports:
         """
         if not out_path:
             out_path = customer_report_file.name
-        logger.info(f"Downloading {out_path}")
+        logger.info(f"Downloading {customer_report_file} -> {out_path}")
         self._api.stream_file(customer_report_file.uri, out_path)
 
     def wait_for_customer_report_for_study(self, project_id: str,
@@ -89,26 +107,27 @@ class CustomerReports:
                 raise IcometrixDataImportException(f"Failed to find a CustomerReport for {study_instance_uid}")
             sleep(self.polling_interval)
 
-    def wait_for_results(self, customer_report_uris: List[str]) -> List[CustomerReportEntity]:
+    def wait_for_results(self, customer_reports: List[CustomerReportEntity]) -> List[CustomerReportEntity]:
         """
         Wait until processing has finished and the result files are available on the customer report
 
-        :param customer_report_uris: A list of customer uris
+        :param customer_reports: A list of customer reports
         :return:
         """
+        customer_report_uris = [customer_report.uri for customer_report in customer_reports]
 
         finished_customer_reports: Dict[str, CustomerReportEntity] = {}
-        while len(finished_customer_reports) != len(customer_report_uris):
+        while len(finished_customer_reports) != len(customer_reports):
             for customer_report_uri in customer_report_uris:
                 if customer_report_uri in finished_customer_reports:
                     continue
 
                 report = self.get_one(customer_report_uri)
                 if report.status != "Finished":
-                    print(f"Waiting for {report.study_instance_uid} to complete: {report.status}")
+                    logger.info(f"Waiting for {report}")
                     continue
 
-                print(f"Finished {report.study_instance_uid}")
+                logger.info(f"Finished {report}")
                 finished_customer_reports[report.uri] = report
             sleep(self.polling_interval)
         return [value for value in finished_customer_reports.values()]

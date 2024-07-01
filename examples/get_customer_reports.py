@@ -1,13 +1,13 @@
 import os
 
-from icometrix_sdk import IcometrixApi
+from icometrix_sdk import IcometrixApi, Region
 from icometrix_sdk.utils.paginator import get_paginator
 
 PROJECT_ID = "uuid"
 DICOM_DIR_PATH = "<path>"
 
 if __name__ == '__main__':
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = Region.EU.value
 
     # Initialize the icometrix API
     ico_api = IcometrixApi()

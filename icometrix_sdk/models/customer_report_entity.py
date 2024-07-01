@@ -1,14 +1,24 @@
-from typing import Optional, Union, List
+from typing import Optional, Union, List, Literal
 
 from pydantic import BaseModel
 
 from icometrix_sdk.models.base import BackendEntity
 
+CustomerReportStatus = Literal["Imported", "Scheduled", "Processing", "QualityControl", "Finished"]
 
 class CustomerReportFile(BaseModel):
     uri: str
     name: str
     type: str
+
+    def __str__(self):
+        return (
+            f"Name: {self.name} | "
+            f"Type: {self.type}"
+        )
+
+    def __repr__(self):
+        return str(self)
 
 
 class CustomerReportEntity(BackendEntity):
@@ -32,3 +42,14 @@ class CustomerReportEntity(BackendEntity):
     study_instance_uid: str
     icobrain_report_type: str
     report_translated_remarks: Optional[str] = None
+
+    def __str__(self):
+        return (
+            f"Report ID: {self.id[:8]} | "
+            f"Status: {self.status} | "
+            f"Report Status: {self.report_status} | "
+            f"Report Type: {self.icobrain_report_type}"
+        )
+
+    def __repr__(self):
+        return str(self)

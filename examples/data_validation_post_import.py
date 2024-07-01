@@ -1,7 +1,7 @@
 import logging
 import os
 
-from icometrix_sdk import IcometrixApi
+from icometrix_sdk import IcometrixApi, Region
 from icometrix_sdk.models.upload_entity import StartUploadDto
 
 PROJECT_ID = "pid"
@@ -12,7 +12,7 @@ DICOM_DIR_PATH = "..."
 logging.basicConfig(level=logging.INFO)
 
 if __name__ == '__main__':
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = Region.EU.value
 
     # Initialize the icometrix API
     ico_api = IcometrixApi()
@@ -36,4 +36,3 @@ if __name__ == '__main__':
         # Add some validation logic for each study e.g. find series
         series = ico_api.series.get_all_for_study(study.uri)
         # ...
-

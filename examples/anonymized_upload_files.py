@@ -2,14 +2,14 @@ import os
 from io import BytesIO
 
 import pydicom
-from pydicom import FileDataset, Dataset
+from pydicom import Dataset
 from pydicom.errors import InvalidDicomError
 
-from icometrix_sdk import IcometrixApi
+from icometrix_sdk import IcometrixApi, Region
 from icometrix_sdk.anonymizer.anonymizer import Anonymizer
 from icometrix_sdk.anonymizer.policy import group_policy, policy_md5
 from icometrix_sdk.models.upload_entity import StartUploadDto
-from icometrix_sdk.anonymizer.hash_factory import SHA3, HashFactory
+from icometrix_sdk.anonymizer.hash_factory import HashFactory
 
 PROJECT_ID = "uuid"
 DICOM_DIR_PATH = "<path>"
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     hash_algo = HashFactory.create_hash_method("short_md5")
     anonymizer = Anonymizer(policy_md5, group_policy, hash_algo)
 
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = Region.EU.value
 
     # Initialize the icometrix API
     ico_api = IcometrixApi()

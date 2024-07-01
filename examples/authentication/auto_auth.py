@@ -6,7 +6,7 @@ import os
 from icometrix_sdk import IcometrixApi
 
 if __name__ == '__main__':
-    os.environ["API_HOST"] = "https://icobrain-test.icometrix.com"
+    os.environ["API_HOST"] = Region.EU.value
 
     ico_api = IcometrixApi()
 
