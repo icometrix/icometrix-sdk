@@ -3,7 +3,7 @@ An example on how to do authentication based on an 'AUTH_METHOD' set as environm
 """
 import os
 
-from icometrix_sdk import IcometrixApi
+from icometrix_sdk import IcometrixApi, Region
 
 if __name__ == '__main__':
     os.environ["API_HOST"] = Region.EU.value

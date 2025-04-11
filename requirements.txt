@@ -1,6 +1,6 @@
-requests~=2.31.0
-pydantic~=2.5.3
-urllib3~=2.1.0
+requests~=2.32.0
+pydantic~=2.11.3
+urllib3~=2.4.0
 pydicom~=2.4.4
 setuptools # Needed to load pydicom's test files
 pytest

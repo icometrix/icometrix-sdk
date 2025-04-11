@@ -8,7 +8,7 @@ from icometrix_sdk import IcometrixApi, PasswordAuthentication
 from icometrix_sdk.utils.requests_api_client import RequestsApiClient
 
 if __name__ == '__main__':
-    SERVER = "https://icobrain-test.icometrix.com"
+    SERVER = "https://icobrain-{region}.icometrix.com"
 
     auth = PasswordAuthentication("example@company.com", os.environ["PASSWORD"])
     client = RequestsApiClient(SERVER, auth)

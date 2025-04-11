@@ -23,7 +23,7 @@ class StudyEntity(BackendEntity):
     scheduled_timestamp: Optional[str] = None
     device_serial_number: Optional[str] = None
     icobrain_report_type: Optional[str] = None
-    magnetic_field_strength: Optional[str] = None
+    magnetic_field_strength: Optional[str | int | float] = None
     manufacturer_model_name: Optional[str] = None
     imported_timestamp: Optional[utc_datetime] = None
 

@@ -1,9 +1,9 @@
 from typing import Optional, List
+from pydantic import BaseModel
+from icometrix_sdk.models.base import utc_datetime
 
-from icometrix_sdk.models.base import BackendEntity
 
-
-class Role(BackendEntity):
+class Role(BaseModel):
     id: str
     name: str
     user_id: str
@@ -12,7 +12,7 @@ class Role(BackendEntity):
     second_entity_id: Optional[str] = None
 
 
-class User(BackendEntity):
+class User(BaseModel):
     id: str
     firstname: str
     lastname: str
@@ -30,4 +30,6 @@ class User(BackendEntity):
     exp: int
     token_expire_time: str
     password_setup_required: bool
-    otp_active: bool
+    otp_active: Optional[bool | str] = None
+    update_timestamp: Optional[utc_datetime] = None
+    creation_timestamp: Optional[utc_datetime] = None

@@ -5,7 +5,7 @@ An example on how to implement custom authentication logic
 from icometrix_sdk import IcometrixApi, AuthenticationMethod
 from icometrix_sdk.utils.requests_api_client import RequestsApiClient
 
-SERVER = "https://icobrain-test.icometrix.com"
+SERVER = "https://icobrain-{region}.icometrix.com"
 
 
 class FileAuth(AuthenticationMethod):
