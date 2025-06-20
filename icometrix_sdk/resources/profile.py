@@ -6,11 +6,11 @@ class Profile:
     def __init__(self, api: ApiClient):
         self._api = api
 
-    def who_am_i(self) -> User:
+    def who_am_i(self, **kwargs) -> User:
         """
         see the currently logged-in user
 
         :return: The current User or 401
         """
-        resp = self._api.get(f"/authentication-service/api/v1/loginstatus")
+        resp = self._api.get(f"/authentication-service/api/v1/loginstatus", **kwargs)
         return User(**resp)

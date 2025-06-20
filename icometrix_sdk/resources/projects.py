@@ -21,24 +21,32 @@ class Projects:
         page = self._api.get("/storage-service/api/v2/projects", **kwargs)
         return PaginatedResponse[ProjectEntity](**page)
 
-    def get_one(self, project_uri: str) -> ProjectEntity:
+    def get_one(self, project_uri: str, **kwargs) -> ProjectEntity:
         """
         Get a single project based on the project uri
 
         :param project_uri: the uri of the project
         :return: A single project or 404
         """
-        params = {"no-settings": "true"}
-        resp = self._api.get(project_uri, params=params)
+        no_settings = {"no-settings": "true"}
+        if "params" in kwargs:
+            kwargs["params"].update(no_settings)
+        else:
+            kwargs["params"] = no_settings
+        resp = self._api.get(project_uri,  **kwargs)
         return ProjectEntity(**resp)
 
-    def get_one_by_id(self, project_id: str) -> ProjectEntity:
+    def get_one_by_id(self, project_id: str, **kwargs) -> ProjectEntity:
         """
         Get a single project based on the project ID
 
         :param project_id: the ID of the project
         :return: A single project or 404
         """
-        params = {"no-settings": "true"}
-        resp = self._api.get(f"/storage-service/api/v1/projects/{project_id}", params=params)
+        no_settings = {"no-settings": "true"}
+        if "params" in kwargs:
+            kwargs["params"].update(no_settings)
+        else:
+            kwargs["params"] = no_settings
+        resp = self._api.get(f"/storage-service/api/v1/projects/{project_id}",  **kwargs)
         return ProjectEntity(**resp)

@@ -17,12 +17,12 @@ class Patients:
         page = self._api.get(f"{project_uri}/patients", **kwargs)
         return PaginatedResponse[PatientEntity](**page)
 
-    def get_one(self, patient_uri: str) -> PatientEntity:
+    def get_one(self, patient_uri: str, **kwargs) -> PatientEntity:
         """
         Get a single patient based on the patient uri
 
         :param patient_uri: the uri of the patient
         :return: A single patient or 404
         """
-        resp = self._api.get(patient_uri)
+        resp = self._api.get(patient_uri, **kwargs)
         return PatientEntity(**resp)

@@ -37,13 +37,14 @@ class PipelineResults:
             for pipeline_result in pipeline_results:
                 if pipeline_result.job_id == job_id:
                     return pipeline_result
+        return None
 
-    def get_one(self, pipeline_result_uri: str) -> PipelineResultEntity:
+    def get_one(self, pipeline_result_uri: str, **kwargs) -> PipelineResultEntity:
         """
         Get a single customer-result based on the customer-result uri
 
         :param pipeline_result_uri: the uri of the pipeline-result
         :return: A single pipeline-result or 404
         """
-        resp = self._api.get(pipeline_result_uri)
+        resp = self._api.get(pipeline_result_uri, **kwargs)
         return PipelineResultEntity(**resp)

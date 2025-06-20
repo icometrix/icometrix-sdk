@@ -119,9 +119,16 @@ class RequestsApiClient(ApiClient):
             )
             response.raise_for_status()
         except HTTPError as e:
-            message = "Exception received when sending an HTTP request"
-            logger.exception(message)
-            raise IcometrixHttpException(e)
+            response = e.response
+            status_code = response.status_code if response else None
+            response_text = response.text if response else str(e)
+            logger.exception("Exception received when sending an HTTP request")
+            raise IcometrixHttpException(
+                message="An error occurred while making an HTTP request",
+                status_code=status_code,
+                response_text=response_text,
+                url=full_url
+            ) from e
 
         return response
 

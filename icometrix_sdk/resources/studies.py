@@ -12,7 +12,7 @@ class Studies:
     def __init__(self, api: ApiClient):
         self._api = api
 
-    def get_one(self, project_id: str, patient_id: str, study_id: str) -> StudyEntity:
+    def get_one(self, project_id: str, patient_id: str, study_id: str, **kwargs) -> StudyEntity:
         """
         Get a single upload entry based on the upload uri
 
@@ -21,7 +21,8 @@ class Studies:
         :param study_id: the ID of the study
         :return: A single study or 404
         """
-        resp = self._api.get(f"/storage-service/api/v1/projects/{project_id}/patients/{patient_id}/studies/{study_id}")
+        uri = f"/storage-service/api/v1/projects/{project_id}/patients/{patient_id}/studies/{study_id}"
+        resp = self._api.get(uri, **kwargs)
         return StudyEntity(**resp)
 
     def get_all_for_patient(self, patient_uri: str, **kwargs) -> PaginatedResponse[StudyEntity]:
